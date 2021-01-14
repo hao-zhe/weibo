@@ -17,12 +17,13 @@ class RedirectIfAuthenticated
      * @param  string|null  ...$guards
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, ...$guards)
+    public function handle($request, Closure $next, $guards = null)
     {
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                session()->flash('info','您已登录，无需再次操作。');
                 return redirect(RouteServiceProvider::HOME);
             }
         }
